@@ -1,0 +1,11 @@
+fastapi>=0.100.0
+uvicorn>=0.22.0
+pydantic>=2.0
+pydantic-settings
+google-genai
+langgraph
+elasticsearch
+ragas
+nest-asyncio
+pytest
+python-dotenv
