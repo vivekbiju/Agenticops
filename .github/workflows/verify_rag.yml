@@ -26,21 +26,23 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           if [ -f requirements.txt ]; then
-            pip install -r requirements.txt
+            # Verbose installation to confirm the modules download successfully
+            python -m pip install -r requirements.txt
           else
-            echo "Warning: requirements.txt not found in root!"
+            echo "Error: requirements.txt not found in root!"
+            exit 1
           fi
 
       - name: Run Ragas Quality Gate Verification
         env:
-          # Pulls your secure secrets defined in GitHub repository settings
+          # Pulls secure keys from your GitHub Secrets vault
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           ELASTIC_ENDPOINT: ${{ secrets.ELASTIC_ENDPOINT }}
           
-          # Optional: Connects live executions straight to your LangSmith Dashboard
+          # Connects live executions directly to your LangSmith Dashboard
           LANGCHAIN_API_KEY: ${{ secrets.LANGCHAIN_API_KEY }}
           LANGCHAIN_TRACING_V2: "true"
           LANGCHAIN_PROJECT: "AgenticOps"
         run: |
-          # Executes your 20-case dataset tests
-          pytest backend/tests/ -v
+          # Use 'python -m pytest' to bypass binary path-resolution blocks
+          python -m pytest backend/tests/ -v
