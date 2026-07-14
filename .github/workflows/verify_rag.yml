@@ -45,4 +45,4 @@ jobs:
           LANGCHAIN_PROJECT: "AgenticOps"
         run: |
           # Use 'python -m pytest' to bypass binary path-resolution blocks
-          python -m pytest backend/tests/ -v
+          python -m pytest Backend/tests/ -v
