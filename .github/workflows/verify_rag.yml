@@ -1,0 +1,46 @@
+name: AgenticOps Ragas Evaluation Gate
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  evaluate-rag:
+    name: Run Ragas Automated Quality Check
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout Code Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python Environment
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install System and Python Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt
+          else
+            echo "Warning: requirements.txt not found in root!"
+          fi
+
+      - name: Run Ragas Quality Gate Verification
+        env:
+          # Pulls your secure secrets defined in GitHub repository settings
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          ELASTIC_ENDPOINT: ${{ secrets.ELASTIC_ENDPOINT }}
+          
+          # Optional: Connects live executions straight to your LangSmith Dashboard
+          LANGCHAIN_API_KEY: ${{ secrets.LANGCHAIN_API_KEY }}
+          LANGCHAIN_TRACING_V2: "true"
+          LANGCHAIN_PROJECT: "AgenticOps"
+        run: |
+          # Executes your 20-case dataset tests
+          pytest backend/tests/ -v
