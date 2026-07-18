@@ -1,17 +1,41 @@
 version: '3.8'
 
 services:
+  # Elasticsearch Storage Layer
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.12.2
     container_name: agenticops_es
     environment:
       - discovery.type=single-node
       - xpack.security.enabled=false
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m" # Kept strictly within Free Tier memory bounds
     ports:
       - "9200:9200"
     volumes:
       - es_data:/usr/share/elasticsearch/data
+    networks:
+      - agentic_net
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s http://localhost:9200/_cluster/health | grep -q '\"status\":\"green\"\\|\"status\":\"yellow\"'"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # FastAPI + LangGraph Application Layer
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: agenticops_backend
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
+      # Add your Gemini or LangSmith keys here as needed, or let them load from a .env file
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
     networks:
       - agentic_net
 
@@ -22,4 +46,3 @@ volumes:
 networks:
   agentic_net:
     driver: bridge
-    

@@ -26,3 +26,10 @@
 **/.vscode/
 **/.idea/
 Thumbs.db
+
+
+#Terraform
+.terraform/
+*.tfstate
+*.tfstate.backup
+.terraform.lock.hcl
