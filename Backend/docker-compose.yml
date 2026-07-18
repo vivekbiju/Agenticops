@@ -32,7 +32,13 @@ services:
       - "8000:8000"
     environment:
       - ELASTICSEARCH_URL=http://elasticsearch:9200
-      # Add your Gemini or LangSmith keys here as needed, or let them load from a .env file
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - LANGCHAIN_TRACING_V2=${LANGCHAIN_TRACING_V2}
+      - LANGCHAIN_ENDPOINT=${LANGCHAIN_ENDPOINT}
+      - LANGCHAIN_API_KEY=${LANGCHAIN_API_KEY}
+      - LANGSMITH_API_KEY=${LANGSMITH_API_KEY}
+      - LANGSMITH_WORKSPACE_ID=${LANGSMITH_WORKSPACE_ID}
+      - LANGCHAIN_PROJECT=${LANGCHAIN_PROJECT}
     depends_on:
       elasticsearch:
         condition: service_healthy
