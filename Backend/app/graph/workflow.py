@@ -1,14 +1,13 @@
 # Location: backend/app/graph/workflow.py
 from langgraph.graph import StateGraph, END
-from langgraph.checkpoint.memory import MemorySaver # Added for state preservation
+from langgraph.checkpoint.memory import MemorySaver
 from app.graph.state import AgenticOpsState
 from app.graph.agents.classifier import IssueClassifierAgent
 from app.graph.agents.researcher import IssueResearcherAgent
-# Import your new agents built in Phase 3
 from app.graph.agents.risk_analyst import RiskAnalystAgent 
 from app.graph.agents.auditor import AuditorAgent
 
-# 1. Initialize our isolated agent class instances
+# 1. Initialize isolated agent class instances
 classifier_agent = IssueClassifierAgent()
 researcher_agent = IssueResearcherAgent()
 risk_analyst_agent = RiskAnalystAgent()
@@ -16,28 +15,21 @@ auditor_agent = AuditorAgent()
 
 
 # 2. Define the Router function to handle dynamic workflow orchestration
-# Update in backend/app/graph/workflow.py
-
 def router_logic(state: AgenticOpsState) -> str:
-    """
-    Evaluates the routing_decision token in the state to determine the next node.
-    Integrates robust, case-insensitive Human-in-the-Loop policy rules for high-risk paths.
-    """
     decision = state.get("routing_decision", "")
     
-    # 1. Normalize classification parameters for robust evaluation
     urgency = str(state.get("extracted_parameters", {}).get("urgency", "low")).strip().lower()
     category = str(state.get("extracted_parameters", {}).get("category", "")).strip().lower()
     
-    # 2. Check HITL Governance Policies BEFORE exiting or entering error paths
     is_high_risk = urgency in ["high", "critical"] or category in ["infrastructure", "security"]
     
-    # If the workflow is ending or entering an error cleanup path, but it's high-risk, force a pause
-    if is_high_risk and (decision in ["ERROR_HANDLER", "FORCE_END"] or decision not in ["RESEARCHER", "RISK_ANALYST", "AUDITOR", "RE_RESEARCH"]):
-        print(f"🚨 High-risk signature detected (Urgency: {urgency}, Category: {category}). Overriding decision '{decision}' to Human Approval Gate...")
+    # 🔑 ONLY intercept and pause at HITL gate after Risk Analyst compiles recommendations
+    # (i.e. decision == "AUDITOR")
+    if is_high_risk and decision == "AUDITOR":
+        print(f"🚨 High-risk signature detected. Intercepting before Auditor node -> Routing to Human Approval Gate...")
         return "human_approval_gate"
 
-    # 3. Standard fallback routing logic
+    # Standard routing logic
     if decision == "RESEARCHER":
         return "researcher"
     elif decision == "RISK_ANALYST":
@@ -45,8 +37,8 @@ def router_logic(state: AgenticOpsState) -> str:
     elif decision == "AUDITOR":
         return "auditor"
     elif decision == "RE_RESEARCH":
-        return "researcher"  # Route back to researcher for cyclical loop
-    elif decision == "ERROR_HANDLER" or decision == "FORCE_END":
+        return "researcher"
+    elif decision in ["ERROR_HANDLER", "FORCE_END"]:
         return "error_cleanup"
     else:
         return END
@@ -78,46 +70,45 @@ workflow.add_node("researcher", researcher_agent.research_historical_context)
 workflow.add_node("risk_analyst", risk_analyst_agent.analyze_account_risk)
 workflow.add_node("auditor", auditor_agent.audit_recommendations)
 workflow.add_node("error_cleanup", error_cleanup_node)
-workflow.add_node("human_approval_gate", human_approval_gate) # Register the HITL gate node
+workflow.add_node("human_approval_gate", human_approval_gate)
 
-# Set the structural entrypoint of the graph boundary
+# Set structural entrypoint
 workflow.set_entry_point("classifier")
 
-# Map conditional execution routing out of the classifier
-# Map conditional execution routing out of the classifier
+# Map conditional execution routing out of classifier
 workflow.add_conditional_edges(
     "classifier",
     router_logic,
     {
         "researcher": "researcher",
         "error_cleanup": "error_cleanup",
-        "human_approval_gate": "human_approval_gate"  # 🔑 Added
+        "human_approval_gate": "human_approval_gate"
     }
 )
 
-# Map conditional execution routing out of the researcher
+# Map conditional execution routing out of researcher
 workflow.add_conditional_edges(
     "researcher",
     router_logic,
     {
         "risk_analyst": "risk_analyst",
         "error_cleanup": "error_cleanup",
-        "human_approval_gate": "human_approval_gate"  # 🔑 Added
+        "human_approval_gate": "human_approval_gate"
     }
 )
 
-# Map conditional execution routing out of the risk analyst
+# Map conditional execution routing out of risk analyst
 workflow.add_conditional_edges(
     "risk_analyst",
     router_logic,
     {
         "auditor": "auditor",
         "error_cleanup": "error_cleanup",
-        "human_approval_gate": "human_approval_gate"  # 🔑 Added
+        "human_approval_gate": "human_approval_gate"
     }
 )
 
-# Map conditional execution routing out of the auditor (Already has it!)
+# Map conditional execution routing out of auditor
 workflow.add_conditional_edges(
     "auditor",
     router_logic,
@@ -129,18 +120,17 @@ workflow.add_conditional_edges(
     }
 )
 
-# Connect terminal paths
+# Connect terminal and bridge paths cleanly
 workflow.add_edge("human_approval_gate", "auditor")
-workflow.add_edge("auditor", END)
+workflow.add_edge("error_cleanup", END)
 
 # 4. Compile the Graph with Memory and State Interrupts
 memory = MemorySaver()
 
-# We instruct LangGraph to suspend execution right before entering our manual gate
 app = workflow.compile(
     checkpointer=memory,
     interrupt_before=["human_approval_gate"]
 )
 
-# Keep both references active to support backward compatibility with evaluation scripts
+# Keep both references active for compatibility
 app_graph = app

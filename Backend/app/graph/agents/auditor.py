@@ -46,7 +46,7 @@ class AuditorAgent:
         """
         
         response = self.client.models.generate_content(
-            model='gemini-3.5-flash',  # Upgraded model to match modern active endpoints
+            model='gemini-3.5-flash',
             contents=prompt,
             config=types.GenerateContentConfig(
                 response_mime_type="application/json",
@@ -59,8 +59,29 @@ class AuditorAgent:
         
         # Determine next routing decision based on audit results
         decision = "RE_RESEARCH" if audit_result.is_hallucination else "PASSED"
+        
+        # Format output using dynamic LLM recommendations if present
+        if recommendation.strip():
+            playbook_text = (
+                f"### Actionable Remediation Playbook\n\n"
+                f"**Audit Status:** {decision}\n"
+                f"**Audit Reasoning:** {audit_result.audit_reasoning}\n\n"
+                f"**Recommended Steps:**\n"
+                f"{recommendation}"
+            )
+        else:
+            playbook_text = (
+                f"### Actionable Remediation Playbook\n\n"
+                f"**Audit Status:** {decision}\n"
+                f"**Audit Reasoning:** {audit_result.audit_reasoning}\n\n"
+                f"**Recommended Steps:**\n"
+                f"1. Isolate nodes exhibiting latency spikes.\n"
+                f"2. Inspect resource metrics and database connection pools.\n"
+                f"3. Apply mitigation configuration and monitor telemetry."
+            )
             
         return {
+            "generated_recommendations": playbook_text,
             "audit_history": [f"Iteration {current_loops + 1}: {audit_result.audit_reasoning}"],
             "loop_count": current_loops + 1,
             "routing_decision": decision,
