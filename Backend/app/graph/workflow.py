@@ -84,12 +84,14 @@ workflow.add_node("human_approval_gate", human_approval_gate) # Register the HIT
 workflow.set_entry_point("classifier")
 
 # Map conditional execution routing out of the classifier
+# Map conditional execution routing out of the classifier
 workflow.add_conditional_edges(
     "classifier",
     router_logic,
     {
         "researcher": "researcher",
-        "error_cleanup": "error_cleanup"
+        "error_cleanup": "error_cleanup",
+        "human_approval_gate": "human_approval_gate"  # 🔑 Added
     }
 )
 
@@ -99,7 +101,8 @@ workflow.add_conditional_edges(
     router_logic,
     {
         "risk_analyst": "risk_analyst",
-        "error_cleanup": "error_cleanup"
+        "error_cleanup": "error_cleanup",
+        "human_approval_gate": "human_approval_gate"  # 🔑 Added
     }
 )
 
@@ -109,18 +112,19 @@ workflow.add_conditional_edges(
     router_logic,
     {
         "auditor": "auditor",
-        "error_cleanup": "error_cleanup"
+        "error_cleanup": "error_cleanup",
+        "human_approval_gate": "human_approval_gate"  # 🔑 Added
     }
 )
 
-# Map conditional execution routing out of the auditor (Handles loops & final exit)
+# Map conditional execution routing out of the auditor (Already has it!)
 workflow.add_conditional_edges(
     "auditor",
     router_logic,
     {
-        "researcher": "researcher",      # Sends it back on hallucination flag
-        "error_cleanup": "error_cleanup",  # Catches FORCE_END (max loops reached)
-        "human_approval_gate": "human_approval_gate", # Routes to approval gate if high risk
+        "researcher": "researcher",      
+        "error_cleanup": "error_cleanup",  
+        "human_approval_gate": "human_approval_gate", 
         END: END
     }
 )
