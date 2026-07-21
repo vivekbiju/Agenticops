@@ -4,13 +4,11 @@ A production-grade, autonomous B2B SaaS operational platform that ingests raw sy
 
 AgenticOps bridges infrastructure observability with multi-agent orchestration, transforming unformatted production crashes into safe, verifiable, and deployable customer recovery strategies in real time.
 
-Live Demo: https://agenticops-hazel.vercel.app
+Live Demo: https://agenticops-hazel.vercel.app ,
 GitHub Repo: https://github.com/vivekbiju/AGENTICOPS-B2B-SAAS
 
----
-```markdown
 ## Table of Contents
-
+```markdown
 - [Overview](#overview)
 - [Features](#features)
 - [Tech Stack](#tech-stack)
@@ -26,16 +24,14 @@ GitHub Repo: https://github.com/vivekbiju/AGENTICOPS-B2B-SAAS
 - [Future Improvements](#future-improvements)
 - [Credits](#credits)
 - [License](#license)
-
----
-
+```
 ## Overview
 
 ### Motivation
-Enterprise SaaS platforms lose revenue to account churn when infrastructure outages occur without immediate, transparent customer communication. Engineers often spend critical minutes manually parsing Kubernetes stack traces, cross-referencing log management databases, and drafting remediation steps. AgenticOps was built to automate incident triage, contextual retrieval, and action-plan drafting into an instant, self-correcting assembly line.
+Enterprise SaaS platforms lose revenue to account churn when infrastructure outages occur without immediate, transparent customer communication. Engineers often spend critical minutes manually parsing Kubernetes stack traces, cross-referencing log management databases, and drafting remediation steps. AgenticOps was built to automate incident triage, contextual retrieval, and action-plan drafting into an instant, self-correcting assembly line. The ultimate goal of AgenticOps is to serve as undeniable proof of systems thinking.
 
 ### Objective
-To build an end-to-end multi-agent orchestration platform that evaluates infrastructure failures, queries historical runbooks using hybrid vector embeddings, projects account churn health scores ($0\text{--}100$), and streams audited playbooks—intercepting critical security threats at a Human-in-the-Loop (HITL) authorization barrier before deployment.
+To build an end-to-end multi-agent orchestration platform that evaluates infrastructure failures, queries historical runbooks using hybrid vector embeddings, projects account churn health scores ($0\text{--}100$), and streams audited playbooks-intercepting critical security threats at a Human-in-the-Loop (HITL) authorization barrier before deployment.
 
 ### Learning Outcomes
 - **Stateful Multi-Agent Workflows:** Architected a 4-agent cyclical graph with LangGraph (`Classifier`, `Researcher`, `Risk Analyst`, `Auditor`) featuring autonomous `RE_RESEARCH` loops.
@@ -45,7 +41,6 @@ To build an end-to-end multi-agent orchestration platform that evaluates infrast
 - **Mathematical Benchmark Evaluation:** Configured a Ragas evaluation pipeline powered by `gemini-2.5-flash` to measure Context Precision ($1.0000$) and Faithfulness ($0.7650$).
 - **Cloud IaC & Containerization:** Provisioned AWS EC2 infrastructure using Terraform and Docker Compose alongside a Next.js 14 Vercel deployment.
 
----
 
 ## Features
 
@@ -56,7 +51,6 @@ To build an end-to-end multi-agent orchestration platform that evaluates infrast
 - **HITL Security Approval Gate:** Intercepts high-risk orchestrator paths (`CRITICAL` urgency or `INFRASTRUCTURE` category), freezing execution in checkpointer memory until an administrator approves via UI.
 - **Asynchronous Token Streaming:** Real-time Server-Sent Events (SSE) telemetry feeding an interactive Next.js operational dashboard.
 
----
 
 ## Tech Stack
 
@@ -95,7 +89,6 @@ To build an end-to-end multi-agent orchestration platform that evaluates infrast
 ## Architecture
 
 
-```
 
 ```
                    AgenticOps End-to-End SaaS Platform
