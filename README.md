@@ -1,4 +1,6 @@
-# AgenticOps Control Center 🚀
+# AgenticOps Control Center 
+<img width="1655" height="767" alt="image" src="https://github.com/user-attachments/assets/7c81f0a4-4f86-45df-be2e-2c295841e6bd" />
+
 
 A production-grade, autonomous B2B SaaS operational platform that ingests raw system error logs, classifies incidents, retrieves contextual historical runbooks using hybrid vector search, evaluates customer churn risk, and streams audited remediation playbooks under strict Human-in-the-Loop (HITL) governance.
 
@@ -221,8 +223,8 @@ The primary Elasticsearch index, `client_footprints`, handles both historical me
 ### Clone the Repository
 
 ```bash
-git clone [https://github.com/vivekbiju/AGENTICOPS-B2B-SAAS.git]
-cd PROJECT-6-AGENTICOPS
+git clone https://github.com/vivekbiju/AGENTICOPS-B2B-SAAS.git
+cd AGENTICOPS-B2B-SAAS
 
 ```
 
@@ -305,7 +307,7 @@ LANGCHAIN_PROJECT="AgenticOps"
 ### Frontend Environment (`Frontend/.env.local`)
 
 ```bash
-NEXT_PUBLIC_API_URL="[http://127.0.0.1:8000](http://127.0.0.1:8000)"
+NEXT_PUBLIC_API_URL="http://44.198.188.31:8000"
 
 ```
 
@@ -337,28 +339,21 @@ The system was evaluated against a 20-case incident benchmark using **Ragas** po
 ---
 
 ## Screenshots
-
-*(Place screenshot images inside a `docs/images/` or `assets/` directory)*
-
-```
-assets/
- ├── dashboard_main.png
- ├── hitl_approval_gate.png
- └── vscode_workspace.png
+<img width="1646" height="498" alt="image" src="https://github.com/user-attachments/assets/251c7be4-5371-4fcc-937d-1e680d5279fe" />
+<img width="495" height="697" alt="image" src="https://github.com/user-attachments/assets/20b6bd8c-977b-424d-8795-6fe35248c858" />
+<img width="1677" height="547" alt="image" src="https://github.com/user-attachments/assets/32d1de99-7632-4264-bd28-05bc2b549ab8" />
 
 ```
-
+<img width="495" height="697" alt="image" src="https://github.com/user-attachments/assets/1a6cbfd7-6b16-49dc-9b2e-c83147077711" />
 
 *Fig 1. Real-time multi-agent execution pipeline and streaming terminal interface.*
 
----
 
 ## Deployment
 
 * **Frontend:** Hosted on **Vercel** with automatic deployment triggers bound to the `Frontend/` root directory.
 * **Backend:** Containerized via Docker Compose and deployed on an **AWS EC2** instance (Amazon Linux 2023) configured via **Terraform**.
 
----
 
 ## Future Improvements
 
@@ -366,23 +361,18 @@ assets/
 * Integrate Webhook triggers for directPagerDuty / Slack incident alerting.
 * Implement Role-Based Access Control (RBAC) for approval gate authorizations.
 * Expand Ragas evaluation datasets to cover multi-region cloud failures.
-
----
+  
 
 ## Credits
 
 **Developer:** Vivek
 
-**GitHub:** [https://github.com/YOUR_USERNAME](https://github.com/YOUR_USERNAME)
+**GitHub:** https://github.com/vivekbiju?tab=repositories
 
 **Project:** AgenticOps Control Center
 
----
 
 ## License
 
 This project is licensed under the [MIT License](https://www.google.com/search?q=LICENSE).
 
-```
-
-```
