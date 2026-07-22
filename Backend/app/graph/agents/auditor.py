@@ -59,15 +59,15 @@ class AuditorAgent:
         
         # Determine next routing decision based on audit results
         decision = "RE_RESEARCH" if audit_result.is_hallucination else "PASSED"
-        
+        clean_recommendation = recommendation.replace("\\n", "\n").strip()
         # Format output using dynamic LLM recommendations if present
-        if recommendation.strip():
+        if clean_recommendation:
             playbook_text = (
                 f"### Actionable Remediation Playbook\n\n"
                 f"**Audit Status:** {decision}\n"
                 f"**Audit Reasoning:** {audit_result.audit_reasoning}\n\n"
                 f"**Recommended Steps:**\n"
-                f"{recommendation}"
+                f"{clean_recommendation}"
             )
         else:
             playbook_text = (
@@ -79,7 +79,7 @@ class AuditorAgent:
                 f"2. Inspect resource metrics and database connection pools.\n"
                 f"3. Apply mitigation configuration and monitor telemetry."
             )
-            
+        playbook_text = playbook_text.replace("\\n", "\n")
         return {
             "generated_recommendations": playbook_text,
             "audit_history": [f"Iteration {current_loops + 1}: {audit_result.audit_reasoning}"],

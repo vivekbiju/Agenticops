@@ -75,7 +75,7 @@ export default function AgenticOpsDashboard() {
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   // Exposes action payload dispatch down onto endpoint paths on approve or reject state adjustments
-const handleAction = async (isApproved: boolean) => {
+  const handleAction = async (isApproved: boolean) => {
     try {
       const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://44.198.188.31:8000";
       
@@ -107,6 +107,7 @@ const handleAction = async (isApproved: boolean) => {
       setRequiresApproval(false);
     }
   };
+
   // Derives which agent is actively executing based on the active stream states
   const getActiveAgentNode = (): AgentNode => {
     if (requiresApproval) return 'AUDITOR'; // Anchor visually on audit step if wait states halt loop execution
@@ -307,10 +308,14 @@ const handleAction = async (isApproved: boolean) => {
                   </span>
                 )}
               </div>
-              <TokenRenderer 
-                text={manualResolutionText || streamText} 
-                onCitationClick={handleCitationClick} 
-              />
+              
+              {/* Wrapped TokenRenderer with whitespace-pre-line and string newline unescaping */}
+              <div className="whitespace-pre-line text-slate-200">
+                <TokenRenderer 
+                  text={(manualResolutionText || streamText)?.replaceAll('\\n', '\n')} 
+                  onCitationClick={handleCitationClick} 
+                />
+              </div>
             </div>
           </section>
 
