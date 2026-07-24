@@ -309,7 +309,7 @@ LANGCHAIN_PROJECT="AgenticOps"
 ### Frontend Environment (`Frontend/.env.local`)
 
 ```bash
-NEXT_PUBLIC_API_URL="http://44.198.188.31:8000"
+NEXT_PUBLIC_API_URL="http://100.50.97.85:8000"
 
 ```
 
