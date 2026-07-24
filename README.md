@@ -372,5 +372,5 @@ The system was evaluated against a 20-case incident benchmark using **Ragas** po
 
 ## License
 
-This project is licensed under the MIT.
+This project is licensed under the [MIT LICENSE](./LICENSE).
 
