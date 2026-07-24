@@ -7,6 +7,8 @@ A production-grade, autonomous B2B SaaS operational platform that ingests raw sy
 AgenticOps bridges infrastructure observability with multi-agent orchestration, transforming unformatted production crashes into safe, verifiable, and deployable customer recovery strategies in real time.
 
 Live Demo: https://agenticops-hazel.vercel.app 
+Note: To optimize AWS cloud infrastructure costs, the backend EC2 instance is currently kept in a stopped state. If you are reviewing this repository and would like to test the live streaming multi-agent pipeline, please feel free to reach out, and I will spin up the backend instance for a live walk-through.
+
 GitHub Repo: https://github.com/vivekbiju/AGENTICOPS-B2B-SAAS
 
 ## Table of Contents
